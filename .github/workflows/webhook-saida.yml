@@ -1,0 +1,22 @@
+name: Webhook de saída
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  enviar-webhook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enviar POST para o webhook
+        run: |
+          curl -X POST "${{ secrets.WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "evento": "push",
+              "repositorio": "${{ github.repository }}",
+              "autor": "${{ github.actor }}",
+              "commit": "${{ github.sha }}",
+              "mensagem": "Webhook enviado pelo GitHub Actions"
+            }'
